@@ -1,0 +1,125 @@
+#wrapper {
+  padding-left: 0;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#sidebar-wrapper {
+  z-index: 987;
+  position: fixed;
+  left: 250px;
+  width: 0;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  background: #000;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar-nav li {
+  text-indent: 20px;
+  line-height: 50px;
+  padding: 10px;
+}
+
+.sidebar-nav li a {
+  display: block;
+  text-decoration: none;
+  color: #14171A;
+}
+
+.sidebar-nav li a:hover {
+  text-decoration: none;
+  color: #1DA1F2;
+  font-weight: bold;
+  background: rgba(29,161,242,0.15);
+  border-radius: 20px;
+}
+
+.sidebar-nav li a:active, .sidebar-nav li a:focus {
+  text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+  height: 65px;
+  font-size: 18px;
+  line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+  color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}
+
+@media (min-width:768px) {
+  #wrapper {
+    padding-left: 250px;
+  }
+}
+
+@media (min-width:768px) {
+  #sidebar-wrapper {
+    width: 250px;
+  }
+}
+
+#page-name {
+  width: 92%;
+}
+
+#top-nav {
+  border-bottom: 1px rgb(234,234,234) solid;
+}
+
+#owner-pic {
+}
+
+#react-div {
+  width: 90%;
+  font-size: 20px;
+}
+
+.comment {
+  margin-left: 30px;
+}
+
+.col-md-10.content {
+  font-size: 20px;
+}
+
+.col-md-2.post-owner {
+  text-align: center;
+}
+
+.d-flex.justify-content-around.react {
+  width: 100%;
+  font-size: 25px;
+}
+
+.card-body.row {
+  max-width: 95%;
+}
+
+.row.posts {
+  max-width: 90%;
+  margin: auto;
+}
+

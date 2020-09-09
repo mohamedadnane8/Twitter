@@ -1,49 +1,79 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>{% block title %}Social Network{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
-    </head>
-    <body>
+<html lang="en" style="font-family: Roboto, sans-serif;">
+<head>
+    <title>{% block title %}Social Network{% endblock %}</title>
+    <link href="{% static 'network/styles.css' %}" rel="stylesheet">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Network</a>
-          
-            <div>
-              <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'index' %}">All Posts</a>
+
+    {#    try #}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static 'network/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="{% static 'network/fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static  'network/css/Sidebar-Menu-1.css' %}">
+    <link rel="stylesheet" href="{% static 'network/css/Sidebar-Menu.css' %}">
+    <link rel="stylesheet" href="{% static "network/css/styles.css" %}">
+
+</head>
+<body>
+
+
+<div id="wrapper">
+    <div id="sidebar-wrapper"
+         style="color: rgb(0,0,0);font-size: 30px;background: white;border-right: 1px rgb(234,234,234) solid;">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand"><a href="#" style="font-size: 30px;height: 70px;">
+                <i class="fa fa-twitter" style="font-size: 50px;color: #1DA1F2;"></i></a>
+            </li>
+            {% if user.is_authenticated %}
+                <li >
+                    <a  href="#"><strong>{{ user.username }}</strong></a>
                 </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Following</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                {% endif %}
-              </ul>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li>
+                    <a href="#">Following</a>
+                </li>
+                <li>
+                    <a id="tweet">Tweet</a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">Log Out</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'login' %}">Log In</a>
+                </li>
+                <li>
+                    <a href="{% url 'register' %}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="page-content-wrapper">
+
+        <div class="container-fluid">
+            <div id="top-nav" class="row"><a class="btn btn-link" role="button" id="menu-toggle" href="#menu-toggle"
+                                             style="font-size: 30px;"><i class="fa fa-bars" style="color: #1DA1F2;"></i></a>
+                <h1 id="page-name" style="text-align: center;">
+                    {% block namePage %}
+                    {% endblock %}
+                </h1>
             </div>
-          </nav>
-        
-        <div class="body">
-            {% block body %}
-            {% endblock %}
+
+            <div class="body">
+                {% block body %}
+                {% endblock %}
+            </div>
+
         </div>
-    </body>
+    </div>
+</div>
+<script src="{% static 'network/js/jquery.min.js' %}"></script>
+<script src="{% static 'network/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'network/js/Sidebar-Menu.js' %}"></script>
+<script src="{% static 'network/js/tweet.js' %}"></script>
+</body>
 </html>

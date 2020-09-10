@@ -1,27 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Use buttons to toggle between views
-  load_index();
+
+  document.querySelector("#tweet-submit").addEventListener('click',()=>post_tweet());
+
+  // By default the index page is loaded
   load_posts();
-  document.querySelector('#tweet-btn').addEventListener('click', () => compose_tweet());
 
-  document.querySelector('#tweet-form').style.display = 'none';
-
-  // By default, load the inbox
 });
 
-function compose_tweet() {
-
-  // Show compose view and hide other views
-
-  document.querySelector('#wrapper').style.display = 'none';
-  document.querySelector('#tweet-form').style.display = 'block';
-  document.querySelector('#tweet-submit').addEventListener('click',()=>post_tweet());
-  // Clear out composition fields
-
-}
 function post_tweet() {
   // Collect data
-
+  alert("hi");
   let description = document.querySelector('#description').value;
   // Sending the email!
   fetch('/tweet', {
@@ -35,14 +23,11 @@ function post_tweet() {
     // Print result
     console.log(result);
   });
-  load_index();
+  $('#myModal').modal('hide');
+
 }
-function load_index(){
-  document.querySelector('#wrapper').style.display = 'block';
-  document.querySelector('#tweet-form').style.display = 'none';
-}
+
 function load_posts(){
-  alert("hi");
   document.querySelector("#tweets").innerHTML = '';
 
   fetch(`/all_tweets`)

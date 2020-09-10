@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    image = models.URLField(default="https://image.ibb.co/jw55Ex/def_face.jpg")
 
 
 class Post(models.Model):
@@ -11,7 +11,6 @@ class Post(models.Model):
 
     description = models.TextField(max_length=600)
     date_created = models.DateTimeField(auto_now_add=True)
-
     def number_likes(self):
         return self.post_like.all().count()
 
@@ -22,9 +21,10 @@ class Post(models.Model):
         return {
             "id": self.id,
             "owner": self.owner.username,
+            "owner_image": self.owner.image,
             "description": self.description,
             "comments": [comment.serialize() for comment in self.comment.all()],
-            "timestamp": self.date_created.strftime("%b %-d %Y, %-I:%M %p"),
+            "date_created": self.date_created.strftime("%b %-d %Y, %-I:%M %p"),
             "likes": self.number_likes(),
         }
 

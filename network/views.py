@@ -4,6 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 import json
+
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import *
 
 
@@ -61,7 +64,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
-
+@csrf_exempt
 def tweet(request):
     # Composing a new email must be via POST
     if request.method != "POST":
@@ -72,10 +75,13 @@ def tweet(request):
     description = data.get("description", "")
 
     if description == "" or description.isspace():
-        #TODO: have to check also if the file has only spaces!
         return JsonResponse({"message": "Email sent successfully."}, status=400)
 
-    post = Post(owner = request.user,description=description)
+    post = Post.objects.create(owner=request.user, description=description)
     post.save()
+    return JsonResponse({"message": "tweet is posted."}, status=201)
 
-    return JsonResponse({"message": "Email sent successfully."}, status=201)
+def all_tweets(request):
+    tweets = Post.objects.all()
+    tweets = tweets.order_by("-date_created").all()
+    return JsonResponse([tweets.serialize() for tweets in tweets], safe=False)

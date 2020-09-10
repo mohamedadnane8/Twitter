@@ -1,0 +1,41 @@
+#tweet-div{
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    background-color: red;
+    opacity: 0.2%;
+    z-index: 30;
+}
+#tweet-form{
+  max-width: 820px;
+  width: 90%;
+  margin: 0 auto;
+  background-color: blue;
+  padding: 20px;
+  border-radius: 30px;
+  /*color: #505e6c;*/
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+    padding: 10px;
+}
+.tweet-div form .form-control {
+  background: #f7f9fc;
+  border: none;
+  border-bottom: 1px solid #dfe7f1;
+  box-shadow: none;
+  outline: none;
+  border-radius: 20px;
+  color: inherit;
+  text-indent: 8px;
+  height:15rem;
+}
+#tweet-submit{
+    border-radius: 20px;
+
+}
+
+
+

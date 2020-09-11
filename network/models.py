@@ -5,6 +5,7 @@ from django.db import models
 class User(AbstractUser):
     image = models.URLField(default="https://image.ibb.co/jw55Ex/def_face.jpg")
     about = models.CharField(max_length=300,blank=True)
+    following = models.ForeignKey('User',on_delete=models.SET_NULL,null=True)
     def __str__(self):
         return self.username
 

@@ -1,8 +1,15 @@
 {% extends "network/layout.html" %}
 
+{% load static %}
+
+
 {% block body %}
     <div id="tweets">
 
     </div>
+
+{% endblock %}
+{% block script %}
+    <script src="{% static 'network/js/tweets_page.js' %}"></script>
 
 {% endblock %}

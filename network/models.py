@@ -4,6 +4,18 @@ from django.db import models
 
 class User(AbstractUser):
     image = models.URLField(default="https://image.ibb.co/jw55Ex/def_face.jpg")
+    about = models.CharField(max_length=300,blank=True)
+    def __str__(self):
+        return self.username
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.username,
+            "image": self.image,
+            "about": self.about,
+
+        }
 
 
 class Post(models.Model):
@@ -20,6 +32,7 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "owner_id": self.owner_id,
             "owner": self.owner.username,
             "owner_image": self.owner.image,
             "description": self.description,

@@ -1,0 +1,56 @@
+{% extends "network/layout.html" %}
+{% block body %}
+
+ <div class="page-header header-filter" data-parallax="true" style="background-image:url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80');"></div>
+    <div class="main main-raised">
+		<div class="profile-content">
+            <div class="container">
+                <div class="row">
+                  <div id="user_info" style="margin: auto">
+                    <div class="col-md-6 ml-auto mr-auto">
+          	           <div class="profile text-center">
+  	                        <div class="avatar">
+  	                            <img src="{{user_info.image}}" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+  	                        </div>
+  	                        <div class="name">
+  	                            <h3 class="title" id = "name">{{user_info.username}}</h3>
+
+  	                        </div>
+                            <div class="row mt-5">
+                                 <div class="col border-right text-center">
+                                     <h3 class="font-light">{{user_info.following.all.count}}</h3>
+                                     <h4 class="text-uppercase">Photos</h4>
+                                 </div>
+                                 <div class="col border-right text-center">
+                                     <h3 class="font-light">54</h3>
+                                     <h4 class="text-uppercase">Videos</hr4>
+                                 </div>
+
+                             </div>
+  	                    </div>
+      	            </div>
+                    <div class="description text-center">
+                        <p>{{user_info.about}}</p>
+                    </div>
+                  </div>
+                  <div id="tweets">
+
+                  </div>
+                </div>
+
+
+            </div>
+
+
+
+
+            </div>
+        </div>
+	</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+var received_data  = "{{ user_info|safe }}";
+alert("{{ user_info|safe }}")
+</script>
+{% endblock %}

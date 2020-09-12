@@ -22,7 +22,7 @@ function post_tweet() {
             // Print result
             console.log(result);
         });
+
     $('#myModal').modal('hide');
 
 }
-

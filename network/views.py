@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import *
 
 
-@login_required(login_url='/login')
+@login_required(login_url="/login")
 def index(request):
     return render(request, "network/index.html")
 
@@ -29,9 +29,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "network/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            return render(
+                request,
+                "network/login.html",
+                {"message": "Invalid username and/or password."},
+            )
     else:
         return render(request, "network/login.html")
 
@@ -50,18 +52,18 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "network/register.html", {
-                "message": "Passwords must match."
-            })
+            return render(
+                request, "network/register.html", {"message": "Passwords must match."}
+            )
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "network/register.html", {
-                "message": "Username already taken."
-            })
+            return render(
+                request, "network/register.html", {"message": "Username already taken."}
+            )
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -97,12 +99,11 @@ def profile(request, id):
         user = User.objects.get(pk=id)
     except User.DoesNotExist:
         # TODO: User not found page
-        return HttpResponse('<h1>Page was found</h1>')
-    if request.method == "GET":
-        return render(request, "network/profile.html")
+        return HttpResponse("<h1>Page was found</h1>")
 
     data = {
         "user_info": user.serialize(),
-        "user_post": [post.serialize() for post in user.posts.objects.all()]
+        "user_post": [post.serialize() for post in user.posts.all()],
     }
-    return JsonResponse(data, safe=False)
+    if request.method == "GET":
+        return render(request, "network/profile.html", context=data)

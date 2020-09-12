@@ -1,4 +1,3 @@
-
 from django.urls import path
 
 from . import views
@@ -10,6 +9,5 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("tweet", views.tweet, name="tweet"),
     path("all_tweets", views.all_tweets, name="all_tweets"),
-    path("profile/<int:id>", views.profile, name="profile")
-
+    path("profile/<int:id>", views.profile, name="profile"),
 ]

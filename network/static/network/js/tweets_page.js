@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // By default the index page is loaded
     load_posts("all_tweets");
 });
-function tweet_element(tweet){
+export function tweet_element(tweet){
   tweet_div = document.createElement("div");
   // Filling it
     tweet_div.innerHTML = ` <div class="row posts">

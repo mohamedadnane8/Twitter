@@ -4,26 +4,44 @@ from django.db import models
 
 class User(AbstractUser):
     image = models.URLField(default="https://image.ibb.co/jw55Ex/def_face.jpg")
-    about = models.CharField(max_length=300,blank=True)
-    following = models.ForeignKey('User',on_delete=models.SET_NULL,null=True)
+    about = models.CharField(max_length=300, blank=True)
+    followings = models.ForeignKey(
+        "User", on_delete=models.SET_NULL, null=True, related_name="follower"
+    )
+    followers = models.ForeignKey(
+        "User", on_delete=models.SET_NULL, null=True, related_name="following"
+    )
+
     def __str__(self):
         return self.username
 
     def serialize(self):
+        try:
+            followings_count = len(self.followings)
+        except:
+            followings_count = 0
+        try:
+            followers_count = len(self.followers)
+        except:
+            followers_count = 0
         return {
             "id": self.id,
             "name": self.username,
             "image": self.image,
             "about": self.about,
-
+            "followers_count": followers_count,
+            "followings_count": followings_count,
         }
 
 
 class Post(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="posts")
+    owner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name="posts"
+    )
 
     description = models.TextField(max_length=600)
     date_created = models.DateTimeField(auto_now_add=True)
+
     def number_likes(self):
         return self.post_like.all().count()
 
@@ -44,8 +62,12 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="user_likes")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, related_name="post_like")
+    owner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name="user_likes"
+    )
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, related_name="post_like"
+    )
 
     # User should not be able to like the same post multiple times
     class Meta:
@@ -54,8 +76,12 @@ class Like(models.Model):
 
 class Comment(models.Model):
     the_comment = models.CharField(max_length=200)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="user_comment", null=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, default=None, related_name="comment")
+    owner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name="user_comment", null=True
+    )
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, default=None, related_name="comment"
+    )
     date_created = models.DateTimeField(auto_now_add=True)
 
     def serialize(self):

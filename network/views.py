@@ -104,6 +104,32 @@ def profile(request, id):
     data = {
         "user_info": user.serialize(),
         "user_post": [post.serialize() for post in user.posts.all()],
+        "is_followed": user in request.user.following.all(),
     }
     if request.method == "GET":
         return render(request, "network/profile.html", context=data)
+
+
+@login_required(login_url="/login")
+def follow(request, action):
+    if request.method != "Post":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    data = json.loads(request.body)
+    user_target = User.objects.get(pk=data.user_id)
+    # True if the user is already following
+    # False if the user is unfollowing
+    action = data.follow_status
+    if action == True:
+        # Unfollow
+        request.user.following.add(user_target)
+        request.user.following.save()
+
+        user_target.followers.delete(request.user)
+        user_target.followers.save()
+    else:
+        # Unfollow
+        request.user.followers.add(user_target)
+        request.user.followers.save()
+
+        user_target.following.delete(request.user)
+        user_target.following.save()

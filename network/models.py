@@ -5,25 +5,20 @@ from django.db import models
 class User(AbstractUser):
     image = models.URLField(default="https://image.ibb.co/jw55Ex/def_face.jpg")
     about = models.CharField(max_length=300, blank=True)
-    followings = models.ForeignKey(
-        "User", on_delete=models.SET_NULL, null=True, related_name="follower"
-    )
-    followers = models.ForeignKey(
-        "User", on_delete=models.SET_NULL, null=True, related_name="following"
-    )
+    followings = models.ManyToManyField("User",blank=True, related_name="follower")
+    followers = models.ManyToManyField("User",blank=True, related_name="following")
 
     def __str__(self):
         return self.username
 
     def serialize(self):
         try:
-            followings_count = len(self.followings)
+            followings_count = len(self.followings.all())
         except:
             followings_count = 0
-        try:
-            followers_count = len(self.followers)
-        except:
-            followers_count = 0
+
+        followers_count = len(self.followers.all())
+
         return {
             "id": self.id,
             "name": self.username,
@@ -46,7 +41,7 @@ class Post(models.Model):
         return self.post_like.all().count()
 
     def __str__(self):
-        return "Post id: {self.id} owner: {self.owner.username}"
+        return f"Post id: {self.id} owner: {self.owner.username}"
 
     def serialize(self):
         return {

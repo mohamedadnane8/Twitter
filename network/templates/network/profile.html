@@ -1,8 +1,12 @@
 {% extends "network/layout.html" %}
 {% load static %}
+{% block beg_script %}
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
+{% endblock %}
 {% block body %}
-
  <div class="page-header header-filter" data-parallax="true" id = "background-image" ></div>
     <div class="main main-raised">
 		<div class="profile-content">
@@ -17,23 +21,28 @@
   	                            <img src="" alt="Circle Image" id = "profile_img" class="img-raised rounded-circle img-fluid">
   	                        </div>
   	                        <div class="name">
-  	                            <h3 class="title" id = "name">{{user_info.username}}</h3>
+  	                            <h3 class="title" id = "name"></h3>
   	                        </div>
-                            <div class="row mt-2">
+                            <div class="row mt-1">
                                  <div class="col border-left border-right text-center">
-                                     <h5 class="text-uppercase">Followers</h4>
-                                     <h4 class="font-light" id = "followers_count"></h3>
+                                     <h5 class="text-uppercase">Followers</h5>
+                                     <h4 class="font-light" id = "followers_count"></h4>
 
                                  </div>
                                  <div class="col border-right text-center">
-                                     <h5 class="text-uppercase">Following</hr4>
-                                      <h4 class="font-light" id = "followings_count"></h3>
-
+                                     <h5 class="text-uppercase">Following</hr5>
+                                      <h4 class="font-light" id = "followings_count"></h4>
                                  </div>
 
                              </div>
+                           {% if user_info.id == user.id %}
+                               {% else %}
+                           <div id="app"></div>
+                           {% endif %}
+
   	                    </div>
       	            </div>
+                      <br><br>
                     <div class="description text-center">
                         <p>{{user_info.about}}</p>
                     </div>
@@ -58,8 +67,46 @@
 <script>
   var received_data  = {{user_info|safe}};
   var user_posts = {{user_post|safe}};
-  console.log(user_posts)
+  var is_followed = {{is_followed|safe}};
 </script>
+    <script type="text/babel">
+
+            class Follow extends React.Component {
+
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        status: {is_followed},
+
+                    };
+                }
+
+                render() {
+                    if (this.state.status === false ) {
+                        return this.renderFollow();
+                    } else {
+                        return this.renderUnfollow();
+                    }
+                }
+
+                renderFollow() {
+                    return <button type="button" id = "follow" class="btn btn-primary" data-follow = "follow">Follow</button>;
+                }
+                renderUnfollow() {
+                    return <button onKeyPress={this.followPress} onChange={this.updateResponse} type="button" id ="follow" class="btn btn-danger" data-follow = "unollow">Unfollow</button>;
+                }
+
+
+
+                updateResponse = (event) => {
+                    this.setState({
+                        response: event.target.value
+                    });
+                }
+            }
+
+            ReactDOM.render(<Follow />, document.querySelector("#app"));
+        </script>
 <script src="{% static 'network/js/profile.js' %}"></script>
 
 {% endblock %}

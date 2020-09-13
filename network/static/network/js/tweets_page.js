@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // By default the index page is loaded
     load_posts("all_tweets");
 });
-export function tweet_element(tweet){
+function tweet_element(tweet){
   tweet_div = document.createElement("div");
   // Filling it
     tweet_div.innerHTML = ` <div class="row posts">
@@ -29,7 +29,7 @@ export function tweet_element(tweet){
     return tweet_div;
 }
 function load_posts(type) {
-    document.querySelector("#tweets").innerHTML = '';
+    document.querySelector("#Alltweets").innerHTML = '';
     document.querySelector("#page-name").innerHTML = 'All Posts';
     fetch(`/${type}`)
         .then(response => response.json())
@@ -40,7 +40,7 @@ function load_posts(type) {
 
 
                 // appending it in the table in HTML
-                document.querySelector("#tweets").appendChild(tweet_element(tweet));
+                document.querySelector("#Alltweets").appendChild(tweet_element(tweet));
 
             })
 

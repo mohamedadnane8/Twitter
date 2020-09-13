@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log(received_data)
 
   load_profile();
     // By default the index page is loaded
@@ -30,9 +29,10 @@ function tweet_element(tweet){
     return tweet_div;
 }
 function load_profile(type) {
-  alert(received_data.image)
 
-  document.querySelector("#page-name").innerHTML = received_data.name;
+  document.querySelector("#name").innerHTML = received_data.name;
+  document.querySelector("#page-name").innerHTML = "Profile";
+
   document.querySelector("#profile_img").src = received_data.image ;
   document.querySelector("#followers_count").innerHTML = received_data.followers_count;
   document.querySelector("#followings_count").innerText = received_data.followings_count ;

@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function post_tweet() {
     // Collect data
-    alert("hi");
     let description = document.querySelector('#description').value;
     // Sending the email!
     fetch('/tweet', {

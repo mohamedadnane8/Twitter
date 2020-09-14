@@ -81,17 +81,25 @@ def tweet(request):
     description = data.get("description", "")
 
     if description == "" or description.isspace():
-        return JsonResponse({"message": "Email sent successfully."}, status=400)
+        return JsonResponse({"message": "Empty!"}, status=400)
 
     post = Post.objects.create(owner=request.user, description=description)
     post.save()
-    return JsonResponse({"message": "tweet is posted."}, status=201)
+    return JsonResponse({"message": "tweet is posted.","tweet":post.serialize()}, status=201)
 
 
 def all_tweets(request):
     tweets = Post.objects.all()
     tweets = tweets.order_by("-date_created").all()
     return JsonResponse([tweets.serialize() for tweets in tweets], safe=False)
+
+@login_required(login_url="/login")
+def following(request):
+    tweets = []
+    for user in request.user.following.all():
+        tweets += user.posts.order_by("-date_created").all()
+    #tweets = tweets.order_by("-date_created").all()
+    return render(request, "network/following.html", context={"tweets":tweets})
 
 
 def profile(request, id):
@@ -100,17 +108,20 @@ def profile(request, id):
     except User.DoesNotExist:
         # TODO: User not found page
         return HttpResponse("<h1>Page was found</h1>")
-
+    try:
+        is_followed = request.user in user.followers.all()
+    except:
+        is_followed = False
     data = {
         "user_info": user.serialize(),
         "user_post": [post.serialize() for post in user.posts.all()],
-        "is_followed": user in request.user.following.all(),
+        "is_followed": is_followed,
     }
     if request.method == "GET":
         return render(request, "network/profile.html", context=data)
 
-@csrf_exempt
 @login_required(login_url="/login")
+@csrf_exempt
 def follow(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
@@ -121,10 +132,8 @@ def follow(request):
     # True if the user is already following
     # False if the user is unfollowing
 
-    action = data.get("follow_status")['is_followed']
 
-    print(f"{type(action)}\n\n{action}{data.get('follow_status')}")
-    if action == True:
+    if  user_target in request.user.following.all():
         # Unfollow
         # TODO have to further modify this function so that it throws error if
         #  the user turned to be already in the list

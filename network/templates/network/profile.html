@@ -23,23 +23,21 @@
   	                        <div class="name">
   	                            <h3 class="title" id = "name"></h3>
   	                        </div>
-                            <div class="row mt-1">
+                           <div class="row mt-1">
                                  <div class="col border-left border-right text-center">
                                      <h5 class="text-uppercase">Followers</h5>
-                                     <h4 class="font-light" id = "followers_count"></h4>
+                                     <h4 class="font-light" id = "followers_count">{{ user_info.followers_count }}</h4>
 
                                  </div>
                                  <div class="col border-right text-center">
                                      <h5 class="text-uppercase">Following</h5>
-                                      <h4 class="font-light" id = "followings_count"></h4>
+                                      <h4 class="font-light" id = "followings_count">{{ user_info.followings_count }}</h4>
                                  </div>
 
                              </div>
-                           {% if user_info.id == user.id %}
-                               {% else %}
-                           <div id="app"></div>
-                           {% endif %}
-
+                            {% if user.id != user_info.id %}
+                                <div id="follow-btn" class = "btn btn-primary" ></div>
+                            {%endif%}
   	                    </div>
       	            </div>
                       <br><br>
@@ -61,7 +59,7 @@
             </div>
         </div>
 	</div>
-    </div>
+
 {% endblock %}
 {% block script %}
 
@@ -70,54 +68,7 @@
   var user_posts = {{user_post|safe}};
   var is_followed = "{{is_followed|safe}}" === "True";
 </script>
-    <script type="text/babel">
 
-            class Follow extends React.Component {
-                constructor(props) {
-                    super(props)
-                    this.state = {
-                        status: {is_followed},
-                        color: {is_followed} ? "red" : "blue",
-                        text_follow: {is_followed} ? "follow" : "unfollow",
-
-                    };
-                }
-
-                render() {
-
-                    return this.renderFollowBtn();
-
-                }
-
-                renderFollowBtn() {
-                    return <button onClick={this.follo} type="button" id = "follow" className="follow btn btn-primary" data-follow = "follow"> {this.state.status ? "follow" : "unfollow"}</button>;
-                }
-
-
-                  follo = () => {
-                    alert("${this.state.status}")
-                    fetch('/follow/', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                user: received_data.id,
-                                follow_status: this.state.status
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(result => {
-                            // Print result
-                            this.setState(state => ({
-                                status : !(state.status),
-                                text_follow: {is_followed} ? "follow" : "unfollow",
-                            }));
-                            this.renderFollowBtn();
-                            console.log(result);
-                        });
-                }
-            }
-
-            ReactDOM.render(<Follow />, document.querySelector("#app"));
-        </script>
 <script src="{% static 'network/js/profile.js' %}"></script>
 
 {% endblock %}

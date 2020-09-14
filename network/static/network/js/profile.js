@@ -1,3 +1,5 @@
+var follower_count = received_data.followers_count;
+
 document.addEventListener('DOMContentLoaded', function () {
 
   load_profile();
@@ -34,11 +36,44 @@ function load_profile(type) {
   document.querySelector("#page-name").innerHTML = "Profile";
 
   document.querySelector("#profile_img").src = received_data.image ;
-  document.querySelector("#followers_count").innerHTML = received_data.followers_count;
-  document.querySelector("#followings_count").innerText = received_data.followings_count ;
+
   document.querySelector("#background-image").backgroundImage = "url('https://image.freepik.com/free-photo/room-with-concrete-floor-smoke-background_9083-2991.jpg')";
-//  tweet_element()
-  user_posts.forEach(tweet =>
+  //  tweet_element()
+    try {
+      updateFollowStats();
+      document.querySelector('#follow-btn').addEventListener('click',()=>follow())
+    } catch (error) {
+
+    }
+
+
+    user_posts.forEach(tweet =>
   document.querySelector("#tweets").appendChild(tweet_element(tweet)));
+
+}
+function updateFollowStats(){
+    document.querySelector("#followers_count").innerHTML = follower_count;
+    document.querySelector("#followings_count").innerText = received_data.followings_count ;
+    document.querySelector('#follow-btn').innerHTML = is_followed ? "unfollow":"follow";
+    document.querySelector('#follow-btn').style.backgroundColor = is_followed ? "red":"blue";
+
+
+}
+function follow(){
+  fetch('/follow/', {
+          method: 'POST',
+          body: JSON.stringify({
+              user: received_data.id,
+          })
+      })
+      .then(response => response.json())
+      .then(result => {
+          // Print result
+          follower_count = is_followed ? (follower_count-1) : (follower_count+1);
+          is_followed = !(is_followed);
+
+          updateFollowStats();
+    });
+
 
 }

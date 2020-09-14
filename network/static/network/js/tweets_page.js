@@ -1,8 +1,11 @@
+
 document.addEventListener('DOMContentLoaded', function () {
 
-
+    document.querySelector('#all_tweets').addEventListener('click', () => load_posts('all_tweets'));
+    document.querySelector('#following').addEventListener('click', () => load_posts('following'));
     // By default the index page is loaded
-    load_posts("all_tweets");
+        load_posts("all_tweets");
+
 });
 function tweet_element(tweet){
   tweet_div = document.createElement("div");
@@ -30,15 +33,11 @@ function tweet_element(tweet){
 }
 function load_posts(type) {
     document.querySelector("#Alltweets").innerHTML = '';
-    document.querySelector("#page-name").innerHTML = 'All Posts';
+    document.querySelector("#page-name").innerHTML = type;
     fetch(`/${type}`)
         .then(response => response.json())
         .then(data => {
             data.forEach(tweet => {
-
-                // Creating the data cell
-
-
                 // appending it in the table in HTML
                 document.querySelector("#Alltweets").appendChild(tweet_element(tweet));
 

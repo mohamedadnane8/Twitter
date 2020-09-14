@@ -70,10 +70,10 @@
             {% endif %}
             {% if user.is_authenticated %}
                 <li>
-                    <a href="{% url 'index' %}">All Tweets</a>
+                    <a id = "all_tweets" href="{% url 'index' %}">All Tweets</a>
                 </li>
                 <li>
-                    <a href="#">Following</a>
+                    <a id = "following" href="{% url 'following' %}">Following</a>
                 </li>
                 <li>
                     <a id="tweet-btn" href="#TweetModal" data-toggle ="modal" target-modal="#TweetModal">Tweet</a>

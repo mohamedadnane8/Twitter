@@ -7,9 +7,29 @@
     <div id="recent-tweet">
 
     </div>
-    <div id="Alltweets">
+    <div class="row posts">
+    {% for tweet in tweets %}
 
+  <div class="col-md-12" class = "post" data-postid = "{{ tweet.id }}">
+      <div class="card mt-4">
+          <div class="card-body row">
+              <div class="col-md-2 post-owner">
+                  <a href= "profile/{{ tweet.owner_id }}">
+                      <img class="rounded-circle" src="{{ tweet.owner.image }}" style="width: 6rem;height: 6rem;">
+                  </a>
+                  <a href = "profile/{{ tweet.owner_id }}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
+                  <span class="text-muted">{{ tweet.date_created }}</span>
+                 </div>
+              <div class="col-md-10 content">
+                  <p style="font-size:20px;">{{ tweet.description }}</p>
+              </div>
+              <div class="d-flex justify-content-around react"><a href="#">{{ tweet.number_likes }}<i class="fa fa-heart"></i></a><a class="comment" href="#"><i class="fa fa-comment"></i></a></div>
+          </div>
+      </div>
+  </div>
+    {% endfor %}
     </div>
+
 
 {% endblock %}
 {% block script %}

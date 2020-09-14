@@ -11,7 +11,7 @@
               <div class="card mt-4">
                   <div class="card-body row">
                       <div class="col-md-2 post-owner">
-                          <a href="">
+                  <a href= "profile/{{ tweet.owner_id }}">
                               <img class="rounded-circle" src="{{ tweet.owner.image }}" style="width: 6rem;height: 6rem;">
                           </a>
                           <a href = "profile/${{ tweet.owner_id }}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>

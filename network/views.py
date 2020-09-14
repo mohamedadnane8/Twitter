@@ -13,7 +13,9 @@ from .models import *
 
 @login_required(login_url="/login")
 def index(request):
-    return render(request, "network/index.html")
+    tweets = Post.objects.all()
+    tweets = tweets.order_by("-date_created").all()
+    return render(request, "network/index.html", context={"tweets": tweets})
 
 
 def login_view(request):
@@ -91,7 +93,7 @@ def tweet(request):
 def all_tweets(request):
     tweets = Post.objects.all()
     tweets = tweets.order_by("-date_created").all()
-    return JsonResponse([tweets.serialize() for tweets in tweets], safe=False)
+    return render(request, "network/following.html", context={"tweets":tweets})
 
 @login_required(login_url="/login")
 def following(request):
@@ -113,8 +115,8 @@ def profile(request, id):
     except:
         is_followed = False
     data = {
-        "user_info": user.serialize(),
-        "user_post": [post.serialize() for post in user.posts.all()],
+        "user_info": user,
+        "user_post":  user.posts.order_by("-date_created").all(),
         "is_followed": is_followed,
     }
     if request.method == "GET":
@@ -126,7 +128,8 @@ def follow(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
     data = json.loads(request.body)
-
+    id = data.get("user")
+    print(f"\n\n\n\n{id}{type(id)}")
     user_target = User.objects.get(pk=data.get("user"))
 
     # True if the user is already following

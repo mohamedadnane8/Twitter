@@ -10,22 +10,18 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-
+    def followers_count(self):
+        return len(self.followers.all())
+    def followings_count(self):
+        return  len(self.followings.all())
     def serialize(self):
-        try:
-            followings_count = len(self.followings.all())
-        except:
-            followings_count = 0
-
-        followers_count = len(self.followers.all())
-
         return {
             "id": self.id,
             "name": self.username,
             "image": self.image,
             "about": self.about,
-            "followers_count": followers_count,
-            "followings_count": followings_count,
+            "followers_count": self.followers_count(),
+            "followings_count": self.followings_count(),
         }
 
 

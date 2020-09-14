@@ -20,9 +20,9 @@ function post_tweet() {
         .then(result => {
             // Print result
             try {
-                document.querySelector('#recent-tweet').appendChild(tweet_element(result.tweet));
+                document.querySelector('#recent-tweet').prepend(tweet_element(result.tweet));
             }catch(error){
-               console.log(result);
+               console.log(error);
 
             }
         });

@@ -109,27 +109,38 @@ def profile(request, id):
     if request.method == "GET":
         return render(request, "network/profile.html", context=data)
 
-
+@csrf_exempt
 @login_required(login_url="/login")
-def follow(request, action):
-    if request.method != "Post":
+def follow(request):
+    if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
     data = json.loads(request.body)
-    user_target = User.objects.get(pk=data.user_id)
+
+    user_target = User.objects.get(pk=data.get("user"))
+
     # True if the user is already following
     # False if the user is unfollowing
-    action = data.follow_status
+
+    action = data.get("follow_status")['is_followed']
+
+    print(f"{type(action)}\n\n{action}{data.get('follow_status')}")
     if action == True:
         # Unfollow
-        request.user.following.add(user_target)
-        request.user.following.save()
+        # TODO have to further modify this function so that it throws error if
+        #  the user turned to be already in the list
+        request.user.following.remove(user_target)
+        request.user.save()
 
-        user_target.followers.delete(request.user)
-        user_target.followers.save()
+        user_target.followers.remove(request.user)
+        user_target.save()
+
+        return JsonResponse({"message":"Unfollowed successfully"}, safe=False)
     else:
-        # Unfollow
-        request.user.followers.add(user_target)
-        request.user.followers.save()
+        # follow
+        request.user.following.add(user_target)
+        request.user.save()
 
-        user_target.following.delete(request.user)
-        user_target.following.save()
+        user_target.followers.add(request.user)
+        user_target.save()
+
+        return JsonResponse({"message": "followed successfully"}, safe=False)

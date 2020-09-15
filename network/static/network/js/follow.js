@@ -33,6 +33,7 @@ function updateFollowStats(){
 
 }
 function follow(){
+    // TODO: havet to fix this
   fetch('/follow/', {
           method: 'POST',
           body: JSON.stringify({

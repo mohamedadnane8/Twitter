@@ -14,7 +14,7 @@
                   <a href= "profile/{{ tweet.owner_id }}">
                               <img class="rounded-circle" src="{{ tweet.owner.image }}" style="width: 6rem;height: 6rem;">
                           </a>
-                          <a href = "profile/${{ tweet.owner_id }}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
+                          <a href = "profile/{{ tweet.owner_id }}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
                           <span class="text-muted">{{ tweet.date_created }}</span>
                          </div>
                       <div class="col-md-10 content">
@@ -25,7 +25,23 @@
               </div>
           </div>
             {% endfor %}
+<div class="pagination " style="text-align: center;display: block;height: 6rem;">
+    <span class="step-links">
+        {% if tweets.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ tweets.previous_page_number }}">previous</a>
+        {% endif %}
 
+        <span class="current">
+            Page {{ tweets.number }} of {{ tweets.paginator.num_pages }}.
+        </span>
+
+        {% if tweets.has_next %}
+            <a href="?page={{ tweets.next_page_number }}">next</a>
+            <a href="?page={{ tweets.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
         </div>
 
 

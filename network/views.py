@@ -4,6 +4,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 import json
 
 from django.views.decorators.csrf import csrf_exempt
@@ -15,7 +16,10 @@ from .models import *
 def index(request):
     tweets = Post.objects.all()
     tweets = tweets.order_by("-date_created").all()
-    return render(request, "network/index.html", context={"tweets": tweets})
+    paginator = Paginator(tweets, 10)
+    page_number = request.GET.get('page')
+    tweets_page = paginator.get_page(page_number)
+    return render(request, "network/index.html", context={"tweets": tweets_page})
 
 
 def login_view(request):
@@ -93,7 +97,10 @@ def tweet(request):
 def all_tweets(request):
     tweets = Post.objects.all()
     tweets = tweets.order_by("-date_created").all()
-    return render(request, "network/following.html", context={"tweets":tweets})
+    paginator = Paginator(tweets, 10)
+    page_number = request.GET.get('page')
+    tweets_page = paginator.get_page(page_number)
+    return render(request, "network/following.html", context={"tweets":tweets_page})
 
 @login_required(login_url="/login")
 def following(request):
@@ -101,7 +108,10 @@ def following(request):
     for user in request.user.following.all():
         tweets += user.posts.order_by("-date_created").all()
     #tweets = tweets.order_by("-date_created").all()
-    return render(request, "network/following.html", context={"tweets":tweets})
+    paginator = Paginator(tweets, 10)
+    page_number = request.GET.get('page')
+    tweets_page = paginator.get_page(page_number)
+    return render(request, "network/following.html", context={"tweets":tweets_page})
 
 
 def profile(request, id):
@@ -156,3 +166,42 @@ def follow(request):
         user_target.save()
 
         return JsonResponse({"message": "followed successfully"}, safe=False)
+
+@csrf_exempt
+def edit(request):
+    if request.method != "PUT":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    data = json.loads(request.body)
+    username = data.get("username")
+    image = data.get("image")
+    about = data.get("about")
+
+    if(username != ""):
+        request.user.username = username
+
+    if (image != ""):
+        request.user.image = image
+
+    if (about != ""):
+        request.user.about = about.strip()
+    request.user.save()
+
+    print(f"username: {request.user.username}\nimage: {request.user.image}\n\n\n\n")
+    return JsonResponse({"message": "You edited your profile successfully"}, safe=False)
+
+@csrf_exempt
+def edit_post(request):
+    if request.method != "PUT":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    data = json.loads(request.body)
+    description = data.get("description").strip()
+    post = Post.objects.get(pk = data.get("post_id"))
+
+    if(description == ""):
+        return JsonResponse({"message": "Desctription cannot be empty"}, status=200)
+    post.description = description
+    post.save()
+    return JsonResponse({"message": "You edited your profile successfully"}, safe=False)
+

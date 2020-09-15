@@ -91,7 +91,7 @@ def tweet(request):
 
     post = Post.objects.create(owner=request.user, description=description)
     post.save()
-    return JsonResponse({"message": "tweet is posted.","tweet":post.serialize()}, status=201)
+    return JsonResponse({"message": "tweet is posted.", "tweet": post.serialize()}, status=201)
 
 
 def all_tweets(request):
@@ -100,18 +100,19 @@ def all_tweets(request):
     paginator = Paginator(tweets, 10)
     page_number = request.GET.get('page')
     tweets_page = paginator.get_page(page_number)
-    return render(request, "network/following.html", context={"tweets":tweets_page})
+    return render(request, "network/following.html", context={"tweets": tweets_page})
+
 
 @login_required(login_url="/login")
 def following(request):
     tweets = []
     for user in request.user.following.all():
         tweets += user.posts.order_by("-date_created").all()
-    #tweets = tweets.order_by("-date_created").all()
+    # tweets = tweets.order_by("-date_created").all()
     paginator = Paginator(tweets, 10)
     page_number = request.GET.get('page')
     tweets_page = paginator.get_page(page_number)
-    return render(request, "network/following.html", context={"tweets":tweets_page})
+    return render(request, "network/following.html", context={"tweets": tweets_page})
 
 
 def profile(request, id):
@@ -126,11 +127,12 @@ def profile(request, id):
         is_followed = False
     data = {
         "user_info": user,
-        "user_post":  user.posts.order_by("-date_created").all(),
+        "user_post": user.posts.order_by("-date_created").all(),
         "is_followed": is_followed,
     }
     if request.method == "GET":
         return render(request, "network/profile.html", context=data)
+
 
 @login_required(login_url="/login")
 @csrf_exempt
@@ -145,8 +147,7 @@ def follow(request):
     # True if the user is already following
     # False if the user is unfollowing
 
-
-    if  user_target in request.user.following.all():
+    if user_target in request.user.following.all():
         # Unfollow
         # TODO have to further modify this function so that it throws error if
         #  the user turned to be already in the list
@@ -156,7 +157,7 @@ def follow(request):
         user_target.followers.remove(request.user)
         user_target.save()
 
-        return JsonResponse({"message":"Unfollowed successfully"}, safe=False)
+        return JsonResponse({"message": "Unfollowed successfully"}, safe=False)
     else:
         # follow
         request.user.following.add(user_target)
@@ -166,6 +167,7 @@ def follow(request):
         user_target.save()
 
         return JsonResponse({"message": "followed successfully"}, safe=False)
+
 
 @csrf_exempt
 def edit(request):
@@ -177,7 +179,7 @@ def edit(request):
     image = data.get("image")
     about = data.get("about")
 
-    if(username != ""):
+    if (username != ""):
         request.user.username = username
 
     if (image != ""):
@@ -190,18 +192,26 @@ def edit(request):
     print(f"username: {request.user.username}\nimage: {request.user.image}\n\n\n\n")
     return JsonResponse({"message": "You edited your profile successfully"}, safe=False)
 
+
 @csrf_exempt
 def edit_post(request):
     if request.method != "PUT":
         return JsonResponse({"error": "POST request required."}, status=400)
 
+    # Loading data from JSON
     data = json.loads(request.body)
-    description = data.get("description").strip()
-    post = Post.objects.get(pk = data.get("post_id"))
+    post = Post.objects.get(pk=data.get("post_id"))
+    description = data.get("description")
 
-    if(description == ""):
-        return JsonResponse({"message": "Desctription cannot be empty"}, status=200)
+    # checking if the current user is the owner of the post
+    if post.owner != request.user:
+        return JsonResponse({"error": "You can only edit your posts!"}, status=400)
+
+    # TODO: have to move this checking the Post class and throw an error
+    # as setter
+    if (description == "" or description.isspace()):
+        return JsonResponse({"message": "Description cannot be empty", "description": post.description}, status=200)
     post.description = description
     post.save()
-    return JsonResponse({"message": "You edited your profile successfully"}, safe=False)
-
+    return JsonResponse({"message": "You edited your profile successfully", "description": post.description},
+                        safe=False)

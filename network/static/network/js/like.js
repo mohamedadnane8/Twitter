@@ -1,15 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.post-edit').forEach(element =>
+    document.querySelectorAll('.like-btn').forEach(element =>
         element.addEventListener('click',(e) => {
             // the element clicked
-            edit_a = e.currentTarget
+            likeBtn = e.currentTarget
 
-            var post_description =  edit_a.parentNode.querySelector('.description-txt')
-            var post_id = edit_a.dataset.post_id
+            var like_count_element =  edit_a.parentNode.querySelector('.like_count')
+            var post_id = likeBtn.dataset.post_id
+            var is_liked  = likeBtn.dataset.is_liked === 'true'
+
+
             // Creating the textarea
             var text_area = document.createElement('textarea')
             text_area.innerHTML = post_description.innerHTML
-            text_area.style.width= "100%"
             // Creating the save button
             var save_a = document.createElement('a')
             save_a.href = "#"

@@ -94,13 +94,6 @@ def tweet(request):
     return JsonResponse({"message": "tweet is posted.", "tweet": post.serialize()}, status=201)
 
 
-def all_tweets(request):
-    tweets = Post.objects.all()
-    tweets = tweets.order_by("-date_created").all()
-    paginator = Paginator(tweets, 10)
-    page_number = request.GET.get('page')
-    tweets_page = paginator.get_page(page_number)
-    return render(request, "network/following.html", context={"tweets": tweets_page})
 
 
 @login_required(login_url="/login")
@@ -168,7 +161,7 @@ def follow(request):
 
         return JsonResponse({"message": "followed successfully"}, safe=False)
 
-
+@login_required(login_url="/login")
 @csrf_exempt
 def edit(request):
     if request.method != "PUT":
@@ -192,7 +185,7 @@ def edit(request):
     print(f"username: {request.user.username}\nimage: {request.user.image}\n\n\n\n")
     return JsonResponse({"message": "You edited your profile successfully"}, safe=False)
 
-
+@login_required(login_url="/login")
 @csrf_exempt
 def edit_post(request):
     if request.method != "PUT":
@@ -208,10 +201,26 @@ def edit_post(request):
         return JsonResponse({"error": "You can only edit your posts!"}, status=400)
 
     # TODO: have to move this checking the Post class and throw an error
-    # as setter
+    #  as setter
     if (description == "" or description.isspace()):
         return JsonResponse({"message": "Description cannot be empty", "description": post.description}, status=200)
     post.description = description
     post.save()
     return JsonResponse({"message": "You edited your profile successfully", "description": post.description},
                         safe=False)
+
+@login_required(login_url="/login")
+def like(request):
+    if request.method != "PUT":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    data = json.loads(request.body)
+    post = Post.objects.get(pk=data.get("post_id"))
+    user = request.user
+    try:
+        Like(owner=user,post=post)
+        return JsonResponse({"message": "Liked successfully"},safe=False)
+
+    except:
+        # delete the like
+        post.post_like.all().filter(user=user).delete()
+        return JsonResponse({"message": "Unliked successfully"},safe=False)

@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
             text_area.style.width= "100%"
             // Creating the save button
             var save_a = document.createElement('a')
-            save_a.href = "#"
             save_a.innerText = "save"
 
             post_description.parentNode.replaceChild(text_area, post_description)

@@ -39,6 +39,8 @@ class Post(models.Model):
     def __str__(self):
         return f"Post id: {self.id} owner: {self.owner.username}"
 
+    def likes_owner_id(self):
+        return [like.owner_id for like in self.post_like.all()]
     def serialize(self):
         return {
             "id": self.id,

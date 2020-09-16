@@ -210,17 +210,19 @@ def edit_post(request):
                         safe=False)
 
 @login_required(login_url="/login")
+@csrf_exempt
 def like(request):
     if request.method != "PUT":
         return JsonResponse({"error": "POST request required."}, status=400)
     data = json.loads(request.body)
     post = Post.objects.get(pk=data.get("post_id"))
     user = request.user
-    try:
-        Like(owner=user,post=post)
-        return JsonResponse({"message": "Liked successfully"},safe=False)
 
-    except:
-        # delete the like
-        post.post_like.all().filter(user=user).delete()
-        return JsonResponse({"message": "Unliked successfully"},safe=False)
+    try:
+        Like.objects.get(owner=user, post=post).delete()
+        return JsonResponse({"message": "Unliked successfully","is_liked":False,"like_count":post.number_likes()},safe=False)
+
+    except Like.DoesNotExist:
+        Like.objects.create(owner=user, post=post)
+        return JsonResponse({"message": "Liked successfully","is_liked":True,"like_count":post.number_likes()}, safe=False)
+

@@ -25,12 +25,15 @@
                   <div class="col-md-10 content">
                       <p style="font-size:20px;" class = "description-txt" data-post_id = "{{ tweet.id }}">{{ tweet.description }}</p>
                       {% if tweet.owner.id == user.id  %}
-                      <a href="#" class = "post-edit" data-post_id = "{{ tweet.id }}">Edit</a>
+                      <button type="button" class = "btn btn-primary post-edit" data-post_id = "{{ tweet.id }}">Edit</button>
                       {% endif %}
                   </div>
                   <div class="d-flex justify-content-around react">
                       <div class = "row">
-                          <a>{{ tweet.number_likes }}</a><a href="#" style="color:gray;border-color: #1DA1F2;"><i class="fa fa-heart"></i></a>
+                          <a style="color:dodgerblue;" class="like_count" data-like_count = "{{ tweet.number_likes }}">{{ tweet.number_likes }}</a>
+                          <a type="button" class = "like-btn" data-post_id = "{{ tweet.id }}"data-is_liked = "{% if user.id in tweet.likes_owner_id %}true{% else %}false{% endif %}"style="color:{% if user.id in tweet.likes_owner_id %}red{% else %}gray{% endif %};">
+                              <i class="fa fa-heart"></i>
+                          </a>
                       </div>
                   </div>
               </div>
@@ -61,5 +64,6 @@
 {% endblock %}
 {% block script %}
     <script src="{% static 'network/js/edit_post.js' %}"></script>
+    <script src="{% static 'network/js/like.js' %}"></script>
 
 {% endblock %}

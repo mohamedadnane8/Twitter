@@ -11,7 +11,15 @@ document.addEventListener('DOMContentLoaded', function () {
               image: image,
               about:about,
           })
-        });
+        }).then(response => response.json())
+                  .then(result => {
+                      // Print result
+                      console.log(result)
+                      document.querySelector('#edit-username').value = result.updated_info.username
+                      document.querySelector('#edit-image').value = result.updated_info.image
+                      document.querySelector('#edit-about').value = result.updated_info.about
+                  });
+
 
     })
     // By default the index page is loaded

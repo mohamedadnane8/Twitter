@@ -19,7 +19,7 @@ def index(request):
     paginator = Paginator(tweets, 10)
     page_number = request.GET.get('page')
     tweets_page = paginator.get_page(page_number)
-    return render(request, "network/index.html", context={"tweets": tweets_page,"page_name":"All Posts"})
+    return render(request, "network/index.html", context={"tweets": tweets_page, "page_name": "All Posts"})
 
 
 def login_view(request):
@@ -78,7 +78,6 @@ def register(request):
 
 @csrf_exempt
 @login_required(login_url="/login")
-
 def tweet(request):
     # Composing a new email must be via POST
     if request.method != "POST":
@@ -96,8 +95,6 @@ def tweet(request):
     return JsonResponse({"message": "tweet is posted.", "tweet": post.serialize()}, status=201)
 
 
-
-
 @login_required(login_url="/login")
 def following(request):
     tweets = []
@@ -107,7 +104,7 @@ def following(request):
     paginator = Paginator(tweets, 10)
     page_number = request.GET.get('page')
     tweets_page = paginator.get_page(page_number)
-    return render(request, "network/index.html", context={"tweets": tweets_page,"page_name":"Following"})
+    return render(request, "network/index.html", context={"tweets": tweets_page, "page_name": "Following"})
 
 
 def profile(request, id):
@@ -163,6 +160,7 @@ def follow(request):
 
         return JsonResponse({"message": "followed successfully"}, safe=False)
 
+
 @login_required(login_url="/login")
 @csrf_exempt
 def edit(request):
@@ -185,7 +183,9 @@ def edit(request):
     request.user.save()
 
     print(f"username: {request.user.username}\nimage: {request.user.image}\n\n\n\n")
-    return JsonResponse({"message": "You edited your profile successfully"}, safe=False)
+    return JsonResponse({"message": "You edited your profile successfully", "updated_info": request.user.serialize()},
+                        safe=False)
+
 
 @login_required(login_url="/login")
 @csrf_exempt
@@ -211,6 +211,7 @@ def edit_post(request):
     return JsonResponse({"message": "You edited your profile successfully", "description": post.description},
                         safe=False)
 
+
 @login_required(login_url="/login")
 @csrf_exempt
 def like(request):
@@ -222,9 +223,10 @@ def like(request):
 
     try:
         Like.objects.get(owner=user, post=post).delete()
-        return JsonResponse({"message": "Unliked successfully","is_liked":False,"like_count":post.number_likes()},safe=False)
+        return JsonResponse({"message": "Unliked successfully", "is_liked": False, "like_count": post.number_likes()},
+                            safe=False)
 
     except Like.DoesNotExist:
         Like.objects.create(owner=user, post=post)
-        return JsonResponse({"message": "Liked successfully","is_liked":True,"like_count":post.number_likes()}, safe=False)
-
+        return JsonResponse({"message": "Liked successfully", "is_liked": True, "like_count": post.number_likes()},
+                            safe=False)

@@ -60,10 +60,10 @@
           	           <div class="profile text-center">
   	                        <div class="avatar">
                               <br>
-  	                            <img src="{{ user_info.image }}" alt="Circle Image" id = "profile_img" class="img-raised rounded-circle img-fluid" style="width: 40rem;">
+  	                            <img src="{{ user_info.image }}" alt="Circle Image" id = "image" class="img-raised rounded-circle img-fluid" style="width: 40rem;">
   	                        </div>
-  	                        <div class="name">
-  	                            <h3 class="title" id = "name">{{ user_info.username }}</h3>
+  	                        <div class="name" style="margin:20px;">
+  	                            <h3 class="username" id = "name">{{ user_info.username }}</h3>
   	                        </div>
                            <div class="row mt-1">
                                  <div class="col border-left border-right text-center">
@@ -83,15 +83,15 @@
                             {% else %}
                                 <div id="follow-btn" class = "btn btn-primary"  data-followers_count = "{{user_info.followers_count  }}"data-user_id = "{{ user_info.id }}"
                                         {% if user in user_info.followers.all %}
-                                        data-is_follow="true"
+                                        data-is_followed="true"
                                     {% else %}
-                                     data-is_follow="false"
+                                     data-is_followed="false"
                                     {% endif %}></div>
                             {%endif%}
   	                    </div>
       	            </div>
                       <br><br>
-                    <div class="description text-center">
+                    <div class="description text-center" id ="about" style="margin:10px;">
                         <p>{{user_info.about}}</p>
                     </div>
                   </div>
@@ -104,28 +104,56 @@
 
     </div>
     <div class="row posts">
-    {% for tweet in user_post %}
-<div class="col-md-12" class = "post" data-postid = "{{ tweet.id }}">
+   {% for tweet in tweets %}
+
+      <div class="col-md-12" class = "post" data-postid = "{{ tweet.id }}">
           <div class="card mt-4">
               <div class="card-body row">
                   <div class="col-md-2 post-owner">
-                      <a href= "profile/{{ tweet.owner_id }}">
+                      <a href= "{% url 'profile' tweet.owner_id  %}">
                           <img class="rounded-circle" src="{{ tweet.owner.image }}" style="width: 6rem;height: 6rem;">
                       </a>
-                      <a href = "profile/{{ tweet.owner_id }}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
+                      <a href = "{% url 'profile' tweet.owner_id  %}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
                       <span class="text-muted">{{ tweet.date_created }}</span>
                      </div>
                   <div class="col-md-10 content">
                       <p style="font-size:20px;" class = "description-txt" data-post_id = "{{ tweet.id }}">{{ tweet.description }}</p>
                       {% if tweet.owner.id == user.id  %}
-                      <a href="#" class = "post-edit" data-post_id = "{{ tweet.id }}">Edit</a>
+                      <button type="button" class = "btn btn-primary post-edit" data-post_id = "{{ tweet.id }}">Edit</button>
                       {% endif %}
                   </div>
-                  <div class="d-flex justify-content-around react"><a href="#">{{ tweet.number_likes }}<i class="fa fa-heart"></i></a><a class="comment" href="#"><i class="fa fa-comment"></i></a></div>
+                  <div class="d-flex justify-content-around react">
+                      <div class = "row">
+                          <a style="color:dodgerblue;" class="like_count" data-like_count = "{{ tweet.number_likes }}">{{ tweet.number_likes }}</a>
+                          <a type="button" class = "like-btn" data-post_id = "{{ tweet.id }}"data-is_liked = "{% if user.id in tweet.likes_owner_id %}true{% else %}false{% endif %}"style="color:{% if user.id in tweet.likes_owner_id %}red{% else %}gray{% endif %};">
+                              <i class="fa fa-heart"></i>
+                          </a>
+                      </div>
+                  </div>
               </div>
           </div>
       </div>
+
     {% endfor %}
+    <div class="pagination " style="text-align: center;display: block;height: 6rem;">
+    <span class="step-links">
+        {% if user_post.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ user_post.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ user_post.number }} of {{ user_post.paginator.num_pages }}.
+        </span>
+
+        {% if user_post.has_next %}
+            <a href="?page={{ user_post.next_page_number }}">next</a>
+            <a href="?page={{ user_post.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
     <div class="pagination " style="text-align: center;display: block;height: 6rem;">
     <span class="step-links">
         {% if tweets.has_previous %}
@@ -143,12 +171,13 @@
         {% endif %}
     </span>
 </div>
+    </div>
 
-{% endblock %}
 {% block script %}
 <script src="{% static 'network/js/edit_profile.js' %}"></script>
     <script src="{% static 'network/js/edit_post.js' %}"></script>
 
 <script src="{% static 'network/js/follow.js' %}"></script>
+    <script src="{% static 'network/js/like.js' %}"></script>
 
 {% endblock %}

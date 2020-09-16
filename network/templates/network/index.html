@@ -9,7 +9,7 @@
 
     <div class="row posts">
     {% if page_name != "Following" and tweets.number == 1 %}
-    <div id="recent-tweet">
+    <div id="recent-tweet" style="width: 100%">
     </div>
     {% endif %}
     {% for tweet in tweets %}
@@ -18,10 +18,10 @@
           <div class="card mt-4">
               <div class="card-body row">
                   <div class="col-md-2 post-owner">
-                      <a href= "profile/{{ tweet.owner_id }}">
+                      <a href= "{% url 'profile' tweet.owner_id  %}">
                           <img class="rounded-circle" src="{{ tweet.owner.image }}" style="width: 6rem;height: 6rem;">
                       </a>
-                      <a href = "profile/{{ tweet.owner_id }}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
+                      <a href = "{% url 'profile' tweet.owner_id  %}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
                       <span class="text-muted">{{ tweet.date_created }}</span>
                      </div>
                   <div class="col-md-10 content">

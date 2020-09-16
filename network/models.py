@@ -36,6 +36,7 @@ class Post(models.Model):
     def number_likes(self):
         return self.post_like.all().count()
 
+
     def __str__(self):
         return f"Post id: {self.id} owner: {self.owner.username}"
 
@@ -44,13 +45,10 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "owner_id": self.owner_id,
-            "owner": self.owner.username,
-            "owner_image": self.owner.image,
+            "owner": self.owner.serialize(),
             "description": self.description,
-            "comments": [comment.serialize() for comment in self.comment.all()],
             "date_created": self.date_created.strftime("%b %-d %Y, %-I:%M %p"),
-            "likes": self.number_likes(),
+            "likes_count": self.number_likes(),
         }
 
 
@@ -67,20 +65,3 @@ class Like(models.Model):
         unique_together = ["post", "owner"]
 
 
-class Comment(models.Model):
-    the_comment = models.CharField(max_length=200)
-    owner = models.ForeignKey(
-        User, on_delete=models.SET_NULL, related_name="user_comment", null=True
-    )
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, default=None, related_name="comment"
-    )
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "owner": self.owner.username,
-            "the_comment": self.the_comment,
-            "date_created": self.date_created.strftime("%b %-d %Y, %-I:%M %p"),
-        }

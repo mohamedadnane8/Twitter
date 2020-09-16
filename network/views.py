@@ -117,9 +117,12 @@ def profile(request, id):
         is_followed = request.user in user.followers.all()
     except:
         is_followed = False
+    paginator = Paginator(user.posts.order_by("-date_created").all(), 10)
+    page_number = request.GET.get('page')
+    tweets_page = paginator.get_page(page_number)
     data = {
         "user_info": user,
-        "user_post": user.posts.order_by("-date_created").all(),
+        "tweets": tweets_page,
         "is_followed": is_followed,
     }
     if request.method == "GET":
@@ -132,10 +135,10 @@ def follow(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
     data = json.loads(request.body)
-    id = data.get("user")
-    print(f"\n\n\n\n{id}{type(id)}")
-    user_target = User.objects.get(pk=data.get("user"))
-
+    try:
+        user_target = User.objects.get(pk=data.get("user"))
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User Not found."}, status=400)
     # True if the user is already following
     # False if the user is unfollowing
 
@@ -149,7 +152,7 @@ def follow(request):
         user_target.followers.remove(request.user)
         user_target.save()
 
-        return JsonResponse({"message": "Unfollowed successfully"}, safe=False)
+        return JsonResponse({"message": "Unfollowed successfully","is_followed": False, "followers_count": user_target.followers_count()}, safe=False)
     else:
         # follow
         request.user.following.add(user_target)
@@ -158,7 +161,7 @@ def follow(request):
         user_target.followers.add(request.user)
         user_target.save()
 
-        return JsonResponse({"message": "followed successfully"}, safe=False)
+        return JsonResponse({"message": "followed successfully","is_followed": True, "followers_count": user_target.followers_count()}, safe=False)
 
 
 @login_required(login_url="/login")
@@ -195,7 +198,11 @@ def edit_post(request):
 
     # Loading data from JSON
     data = json.loads(request.body)
-    post = Post.objects.get(pk=data.get("post_id"))
+    try:
+        post = Post.objects.get(pk=data.get("post_id"))
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=400)
+
     description = data.get("description")
 
     # checking if the current user is the owner of the post

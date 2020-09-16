@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       // Print result
                       console.log(result)
                       is_liked = result.is_liked
-                      likeBtn.style.color = is_liked ? "red":"blue";
+                      likeBtn.style.color = is_liked ? "red":"gray";
                       like_count_element.dataset.like_count = result.like_count
                       like_count_element.innerText = result.like_count
 

@@ -7,10 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
   try {
       follow_btn = document.querySelector('#follow-btn');
       // get data from the dataset
-      is_followed = follow_btn.dataset.is_followed === 'true'
-      alert(is_followed)
+      is_followed = follow_btn.dataset.is_followed === "true"
+      console.log(typeof is_followed)
       user_id = parseInt(follow_btn.dataset.user_id)
-      alert(user_id)
       followers_count =  parseInt(follow_btn.dataset.followers_count)
 
       //creating and adding event listener to the follow btn
@@ -42,9 +41,9 @@ function follow(){
       .then(response => response.json())
       .then(result => {
           // Print result
-          followers_count = is_followed ? (followers_count-1) : (followers_count+1);
-          is_followed = !(is_followed);
-
+          console.log(result);
+          followers_count = result.followers_count
+          is_followed = result.is_followed
           updateFollowStats();
     });
 

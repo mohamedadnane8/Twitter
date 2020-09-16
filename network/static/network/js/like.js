@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    alert("dom")
+
     document.querySelectorAll('.like-btn').forEach(element =>
         element.addEventListener('click',(e) => {
             // the element clicked

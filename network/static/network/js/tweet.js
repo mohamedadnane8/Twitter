@@ -34,7 +34,7 @@ function post_tweet() {
 function tweet_element(tweet){
   tweet_div = document.createElement("div");
   // Filling it
-    tweet_div.innerHTML = ` <div class="row posts">
+    tweet_div.innerHTML = ` 
                       <div class="col-md-12">
                           <div class="card mt-4">
                               <div class="card-body row">
@@ -51,7 +51,6 @@ function tweet_element(tweet){
                                   <div class="d-flex justify-content-around react"><a href="#">${tweet.likes}<i class="fa fa-heart"></i></a><a class="comment" href="#"><i class="fa fa-comment"></i></a></div>
                               </div>
                           </div>
-                      </div>
-                  </div>`
+                      </div>`
     return tweet_div;
 }

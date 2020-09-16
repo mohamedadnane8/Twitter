@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
               about:about,
           })
         });
-        alert(`done`)
 
     })
     // By default the index page is loaded

@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
         username = document.querySelector('#edit-username').value
         image = document.querySelector('#edit-image').value
         about = document.querySelector('#edit-about').value
-        alert(`${username} ${image} ${about}`)
         fetch(`/edit/`, {
           method: 'PUT',
           body: JSON.stringify({
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
               about:about,
           })
         });
-        alert(`done`)
 
     })
     // By default the index page is loaded

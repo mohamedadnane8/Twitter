@@ -6,10 +6,12 @@
 
 {% block body %}
 {#    TODO: Remove the revent tweet#}
-    <div id="recent-tweet">
 
-    </div>
     <div class="row posts">
+    {% if page_name != "Following" and tweets.number == 1 %}
+    <div id="recent-tweet">
+    </div>
+    {% endif %}
     {% for tweet in tweets %}
 
       <div class="col-md-12" class = "post" data-postid = "{{ tweet.id }}">
@@ -63,6 +65,10 @@
 
 {% endblock %}
 {% block script %}
+    <script>
+        document.querySelector("#page-name").innerHTML = "{{ page_name }}";
+
+    </script>
     <script src="{% static 'network/js/edit_post.js' %}"></script>
     <script src="{% static 'network/js/like.js' %}"></script>
 

@@ -15,6 +15,8 @@ function edit_post(e){
     // Creating the save button
     var save_a = document.createElement('a')
     save_a.innerText = "save"
+    save_a.className = "btn btn-primary"
+    save_a.ty
 
     post_description.parentNode.replaceChild(text_area, post_description)
     edit_a.parentNode.replaceChild(save_a,edit_a)

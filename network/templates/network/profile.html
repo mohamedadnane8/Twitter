@@ -111,9 +111,9 @@
               <div class="card-body row">
                   <div class="col-md-2 post-owner">
                       <a href= "{% url 'profile' tweet.owner_id  %}">
-                          <img class="rounded-circle" src="{{ tweet.owner.image }}" style="width: 6rem;height: 6rem;">
+                          <img class="rounded-circle image-comment" src="{{ tweet.owner.image }}" style="width: 6rem;height: 6rem;">
                       </a>
-                      <a href = "{% url 'profile' tweet.owner_id  %}"id="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
+                      <a href = "{% url 'profile' tweet.owner_id  %}"class="owner-name" style="text-align: center;display: block;"><b>{{ tweet.owner }}</b></a>
                       <span class="text-muted">{{ tweet.date_created }}</span>
                      </div>
                   <div class="col-md-10 content">
@@ -137,18 +137,18 @@
     {% endfor %}
     <div class="pagination " style="text-align: center;display: block;height: 6rem;">
     <span class="step-links">
-        {% if user_post.has_previous %}
+        {% if tweets.has_previous %}
             <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ user_post.previous_page_number }}">previous</a>
+            <a href="?page={{ tweets.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">
-            Page {{ user_post.number }} of {{ user_post.paginator.num_pages }}.
+            Page {{ tweets.number }} of {{ tweets.paginator.num_pages }}.
         </span>
 
-        {% if user_post.has_next %}
-            <a href="?page={{ user_post.next_page_number }}">next</a>
-            <a href="?page={{ user_post.paginator.num_pages }}">last &raquo;</a>
+        {% if tweets.has_next %}
+            <a href="?page={{ tweets.next_page_number }}">next</a>
+            <a href="?page={{ tweets.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>

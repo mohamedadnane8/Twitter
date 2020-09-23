@@ -62,7 +62,7 @@ function tweet_element(tweet){
       </div>
 `;
     tweet_div.querySelector('.like-btn').addEventListener('click',(e) => like(e))
-    tweet_div.querySelectorAll('.post-edit').addEventListener('click',(e) => edit_post(e))
+    tweet_div.querySelector('.post-edit').addEventListener('click',(e) => edit_post(e))
 
     return tweet_div;
 }

@@ -237,3 +237,4 @@ def like(request):
         Like.objects.create(owner=user, post=post)
         return JsonResponse({"message": "Liked successfully", "is_liked": True, "like_count": post.number_likes()},
                             safe=False)
+

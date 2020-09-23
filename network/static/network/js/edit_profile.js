@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', function () {
                       // Print result
                       console.log(result)
                       document.querySelector('#name').innerText = result.updated_info.name
+                      document.querySelectorAll('.owner-name').forEach(element => {
+                          element.innerText = result.updated_info.name
+                      })
+                      document.querySelectorAll('.image-comment').forEach(element=>{
+                          element.src = result.updated_info.image
+                      })
+
                       document.querySelector('#image').src = result.updated_info.image
                       document.querySelector('#about').innerText = result.updated_info.about
                   });
